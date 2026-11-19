@@ -1,0 +1,32 @@
+name: Auto Fetch Delta Force CN Password
+
+on:
+  schedule:
+    # 每天香港時間 08:30, 12:30, 16:30, 20:30 自動執行 (UTC時間減8小時)
+    - cron: '30 0,4,8,12 * * *'
+  workflow_dispatch: # 允許手動一鍵立即測試執行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run fetcher script
+        run: python fetch_password.py
+
+      - name: Commit and push updated JSON
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add password.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update daily password" && git push)
