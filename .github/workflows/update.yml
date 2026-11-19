@@ -1,4 +1,4 @@
-name: Auto Fetch Delta Force CN Password
+name: Auto Fetch DFCNDP
 
 on:
   schedule:
@@ -22,7 +22,7 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Run fetcher script
-        run: python fetch_password.py
+        run: python fetch_pw.py
 
       - name: Commit and push updated JSON
         run: |
