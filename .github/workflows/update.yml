@@ -2,9 +2,10 @@ name: Auto Fetch DFCNDP
 
 on:
   schedule:
-    # 每天香港時間 08:30, 12:30, 16:30, 20:30 自動執行 (UTC時間減8小時)
-    - cron: '30 0,4,8,12 * * *'
-  workflow_dispatch: # 允許手動一鍵立即測試執行
+    # 香港時間 (UTC+8) 每天 00:05, 00:30, 08:30, 12:30 自動執行 (UTC時間減8小時)
+    - cron: '5,30 16 * * *'
+    - cron: '30 0,4 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,7 +20,9 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4
+        run: |
+          pip install requests beautifulsoup4 playwright
+          playwright install chromium
 
       - name: Run fetcher script
         run: python fetch_pw.py
